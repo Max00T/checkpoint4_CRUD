@@ -50,3 +50,5 @@ SELECT * FROM cds LEFT JOIN reviews ON cds.id = reviews.cd_id;
 SELECT cds.id, cds.band_name, cds.album_name, cds.release_year, reviews.rating
 FROM cds
 LEFT JOIN reviews ON cds.id = reviews.cd_id;
+
+USE checkpoint4
