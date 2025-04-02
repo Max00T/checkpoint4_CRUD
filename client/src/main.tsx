@@ -4,16 +4,18 @@ import { createRoot } from "react-dom/client";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 
 /* ************************************************************************* */
+import { getAllCds } from "./services/request";
+
+/* ************************************************************************* */
 
 // Import the main app component
 import App from "./App";
 
 // Import additional components for new routes
-import HomePage from "./pages/HomePage";
+import Home from "./pages/Home";
+import ManageCd from "./pages/ManageCd";
+import DeleteCd from "./pages/DeleteCd";
 // Try creating these components in the "pages" folder
-
-// import About from "./pages/About";
-// import Contact from "./pages/Contact";
 
 /* ************************************************************************* */
 
@@ -24,14 +26,46 @@ const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/", // The root path
-        element: <HomePage />, // Renders the App component for the home page
+        path: "/",
+        element: <Home />,
+        loader: async () => {
+          try {
+            return await getAllCds();
+          } catch (error) {
+            console.error("Erreur de chargement des CDs :", error);
+            return []; // Retourne un tableau vide en cas d'erreur
+          }
+        },
       },
       // {
-      //   path: "/delete",
-      //   element: <supprimer />,
+      //   path: "/manage",
       // },
-      // Try adding a new route! For example, "/about" with an About component
+
+      {
+        path: "/manage",
+        element: <ManageCd />,
+        loader: async () => {
+          try {
+            return await getAllCds(); // Charge les CDs existants
+          } catch (error) {
+            console.error("Erreur de chargement des CDs :", error);
+            return [];
+          }
+        },
+      },
+
+      {
+        path: "/delete",
+        element: <DeleteCd />,
+        loader: async () => {
+          try {
+            return await getAllCds(); // Charge les CDs
+          } catch (error) {
+            console.error("Erreur de chargement des CDs :", error);
+            return []; // Retourne un tableau vide en cas d'erreur
+          }
+        },
+      },
     ],
   },
 ]);

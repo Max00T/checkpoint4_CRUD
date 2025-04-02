@@ -1,6 +1,5 @@
 import type { RequestHandler } from "express";
 
-// Import access to data
 import cdRepository from "./cdRepository";
 
 // BROWSE - Lire tous les CDs
@@ -8,10 +7,9 @@ const browse: RequestHandler = async (req, res, next) => {
   try {
     // Fetch all cd
     const cds = await cdRepository.readAll();
-    // Respond with the cd in JSON format
+
     res.json(cds);
   } catch (err) {
-    // Pass any errors to the error-handling middleware
     next(err);
   }
 };
@@ -27,7 +25,6 @@ const read: RequestHandler = async (req, res, next) => {
       res.json(cd);
     }
   } catch (err) {
-    // Pass any errors to the error-handling middleware
     next(err);
   }
 };
@@ -36,13 +33,18 @@ const read: RequestHandler = async (req, res, next) => {
 
 const add: RequestHandler = async (req, res, next) => {
   try {
-    // Extract the cd data from the request body
-    const newCd = { band_name, album_name, release_year, cover };
+    const newCd = {
+      band_name: req.body.band_name,
+      album_name: req.body.album_name,
+      release_year: req.body.release_year,
+      cover: req.body.cover || null,
+    };
+
     const insertId = await cdRepository.create(newCd);
 
-    res.status(201).json({ insertId });
+    // Retourner une réponse avec le statut 201 et l'ID du CD ajouté
+    res.status(201).json({ id: insertId });
   } catch (err) {
-    // Pass any errors to the error-handling middleware
     next(err);
   }
 };
@@ -51,16 +53,27 @@ const add: RequestHandler = async (req, res, next) => {
 const edit: RequestHandler = async (req, res, next) => {
   try {
     const cdId = Number(req.params.id);
+    const editCd = req.body;
 
-    const affectedRows = await cdRepository.update(editCd);
+    console.info("ID reçu :", cdId);
+    console.info("Données reçues :", editCd);
+
+    const affectedRows = await cdRepository.update(cdId, editCd);
+
+    console.info("Lignes affectées :", affectedRows);
 
     if (affectedRows === 0) {
-      res.sendStatus(404);
-    } else {
-      res.sendStatus(204);
+      return res.status(404).json({ message: "CD non trouvé" });
     }
+
+    // Renvoyer les données mises à jour
+    res.status(200).json(editCd);
   } catch (err) {
-    next(err);
+    console.error("Erreur complète :", err);
+    res.status(500).json({
+      message: "Erreur serveur lors de la mise à jour",
+      error: err instanceof Error ? err.message : "Erreur inconnue",
+    });
   }
 };
 
