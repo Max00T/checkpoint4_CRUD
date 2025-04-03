@@ -31,6 +31,24 @@ const read: RequestHandler = async (req, res, next) => {
 
 // ADD - Ajouter un CD
 
+// const add: RequestHandler = async (req, res, next) => {
+//   try {
+//     const newCd = {
+//       band_name: req.body.band_name,
+//       album_name: req.body.album_name,
+//       release_year: req.body.release_year,
+//       cover: req.body.cover || null,
+//     };
+
+//     const insertId = await cdRepository.create(newCd);
+
+//     // Retourner une réponse avec le statut 201 et l'ID du CD ajouté
+//     res.status(201).json({ id: insertId });
+//   } catch (err) {
+//     next(err);
+//   }
+// };
+
 const add: RequestHandler = async (req, res, next) => {
   try {
     const newCd = {
@@ -42,7 +60,15 @@ const add: RequestHandler = async (req, res, next) => {
 
     const insertId = await cdRepository.create(newCd);
 
-    // Retourner une réponse avec le statut 201 et l'ID du CD ajouté
+    // Ajouter une review si fournie
+    if (req.body.rating || req.body.review_text) {
+      await cdRepository.addReview(
+        insertId,
+        req.body.rating,
+        req.body.review_text,
+      );
+    }
+
     res.status(201).json({ id: insertId });
   } catch (err) {
     next(err);
@@ -50,30 +76,50 @@ const add: RequestHandler = async (req, res, next) => {
 };
 
 // EDIT - Modifier un CD existant
+// const edit: RequestHandler = async (req, res, next) => {
+//   try {
+//     const cdId = Number(req.params.id);
+//     const editCd = req.body;
+
+//     console.info("ID reçu :", cdId);
+//     console.info("Données reçues :", editCd);
+
+//     const affectedRows = await cdRepository.update(cdId, editCd);
+
+//     console.info("Lignes affectées :", affectedRows);
+
+//     if (affectedRows === 0) {
+//       return res.status(404).json({ message: "CD non trouvé" });
+//     }
+
+//     // Renvoyer les données mises à jour
+//     res.status(200).json(editCd);
+//   } catch (err) {
+//     console.error("Erreur complète :", err);
+//     res.status(500).json({
+//       message: "Erreur serveur lors de la mise à jour",
+//       error: err instanceof Error ? err.message : "Erreur inconnue",
+//     });
+//   }
+// };
+
 const edit: RequestHandler = async (req, res, next) => {
   try {
     const cdId = Number(req.params.id);
     const editCd = req.body;
 
-    console.info("ID reçu :", cdId);
-    console.info("Données reçues :", editCd);
-
     const affectedRows = await cdRepository.update(cdId, editCd);
-
-    console.info("Lignes affectées :", affectedRows);
 
     if (affectedRows === 0) {
       return res.status(404).json({ message: "CD non trouvé" });
     }
 
-    // Renvoyer les données mises à jour
+    // Mettre à jour ou ajouter une review
+    await cdRepository.updateReview(cdId, editCd.rating, editCd.review_text);
+
     res.status(200).json(editCd);
   } catch (err) {
-    console.error("Erreur complète :", err);
-    res.status(500).json({
-      message: "Erreur serveur lors de la mise à jour",
-      error: err instanceof Error ? err.message : "Erreur inconnue",
-    });
+    res.status(500).json({ message: "Erreur serveur lors de la mise à jour" });
   }
 };
 

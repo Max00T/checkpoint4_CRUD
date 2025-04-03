@@ -12,7 +12,7 @@ export default function DeleteCd() {
   const handleDelete = async (id: number) => {
     if (window.confirm("Voulez-vous vraiment supprimer ce CD ?")) {
       try {
-        await deleteCd(id); // Supprime en BDD
+        await deleteCd(id);
         setCds(cds.filter((cd) => cd.id !== id)); // Met à jour l'état local
       } catch (error) {
         console.error("Erreur lors de la suppression :", error);
@@ -36,9 +36,9 @@ export default function DeleteCd() {
                 </h3>
                 <p className="release-year">📅 {cd.release_year}</p>
               </div>
-              {/* {cd.cover && (
+              {cd.cover && (
                 <img src={cd.cover} alt={cd.album_name} className="cd-cover" />
-              )} */}
+              )}
 
               <button
                 type="button"

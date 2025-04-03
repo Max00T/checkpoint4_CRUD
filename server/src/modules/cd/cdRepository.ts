@@ -21,8 +21,8 @@ class CdRepository {
   //READ ALL Récupérer tous les cds
   async readAll() {
     const [rows] = await databaseClient.query<Rows>(
-      "SELECT * from cds ORDER BY band_name ASC, release_year ASC;",
-      //"SELECT * FROM cds LEFT JOIN reviews ON cds.id = reviews.cd_id ORDER BY band_name ASC, release_year ASC",
+      // "SELECT * from cds ORDER BY band_name ASC, release_year ASC;",
+      "SELECT * FROM cds LEFT JOIN reviews ON cds.id = reviews.cd_id ORDER BY band_name ASC, release_year ASC",
     );
     return rows as cds[];
   }
@@ -51,5 +51,19 @@ class CdRepository {
     );
     return result.affectedRows;
   }
+  async addReview(cdId: number, rating: number, review_text: string) {
+    await databaseClient.query(
+      "INSERT INTO reviews (cd_id, rating, review_text) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE rating = VALUES(rating), review_text = VALUES(review_text)",
+      [cdId, rating, review_text],
+    );
+  }
+
+  async updateReview(cdId: number, rating: number, review_text: string) {
+    await databaseClient.query(
+      "UPDATE reviews SET rating = ?, review_text = ? WHERE cd_id = ?",
+      [rating, review_text, cdId],
+    );
+  }
 }
+
 export default new CdRepository();

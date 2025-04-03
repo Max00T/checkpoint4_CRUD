@@ -27,7 +27,7 @@ values
     ('Muse', 'Drones', 2015, 'https://upload.wikimedia.org/wikipedia/en/4/44/MuseDronesCover.jpg'),
     ('Muse', 'Simulation Theory', 2018, 'https://upload.wikimedia.org/wikipedia/en/e/e1/Simulation_Theory_%28album%29.jpg'),
     ('Muse', 'Will of the People', 2022, 'https://upload.wikimedia.org/wikipedia/en/1/12/Muse_-_Will_of_the_People.png'),
-    ('Foo Fighters', 'Foo Fighters', 1995, NULL),
+    ('Foo Fighters', 'Foo Fighters', 1995, "https://m.media-amazon.com/images/I/712hEF1WDJL._AC_UY436_FMwebp_QL65_.jpg"),
     ('Foo Fighters', 'The Colour and the Shape', 1997, NULL),
     ('Foo Fighters', 'There Is Nothing Left to Lose', 1999, 'https://upload.wikimedia.org/wikipedia/en/8/8b/Foo_Fighters_-_There_Is_Nothing_Left_to_Lose.jpg'),
     ('Foo Fighters', 'One by One', 2002, 'https://m.media-amazon.com/images/I/61BP5VG22VL._UF1000,1000_QL80_.jpg'),

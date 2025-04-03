@@ -10,6 +10,8 @@ export default function ManageCd() {
     album_name: "",
     release_year: new Date().getFullYear(),
     cover: "",
+    rating: "3", // Valeur par défaut
+    review_text: "",
   });
 
   // Charger les CDs au chargement du composant
@@ -31,11 +33,11 @@ export default function ManageCd() {
     setCd({ ...cd, [e.target.name]: e.target.value });
   };
 
-  // Soumission du formulaire (Ajout ou Mise à jour)
+  // (Ajout ou Mise à jour) du formulaire
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      console.info("Envoi des données :", cd); // Ajout d'un log pour inspecter les données
+      console.info("Envoi des données :", cd);
       if (cd.id != null) {
         // Modifier un CD existant
         const updatedCd = await updateCd(cd.id, cd);
@@ -47,7 +49,7 @@ export default function ManageCd() {
         // Ajouter un nouveau CD
         const newCd = await addCd(cd);
         //setCds([...cds, newCd]); // Mettre à jour la liste obligé de faire F5 pour voir le nouveau CD
-        // 🔥 Mise à jour immédiate du state pour éviter le rafraîchissement manuel
+        // 🔥 Mise à jour immédiate pour éviter le rafraîchissement manuel
         setCds((prevCds) => [...prevCds, { id: newCd.insertId, ...cd }]);
         alert("CD ajouté avec succès !");
       }
@@ -118,9 +120,28 @@ export default function ManageCd() {
           name="cover"
           value={cd.cover || ""}
           onChange={handleChange}
-          placeholder="URL de l'image"
+          placeholder="URL de l'image (non obligatoire)"
+        />
+        <label htmlFor="rating">Note (1-5) :</label>
+        <input
+          id="rating"
+          type="number"
+          name="rating"
+          value={cd.rating}
+          min="1"
+          max="5"
+          onChange={handleChange}
+          required
         />
 
+        <label htmlFor="review_text">Avis :</label>
+        <textarea
+          id="review_text"
+          name="review_text"
+          value={cd.review_text}
+          onChange={handleChange}
+          placeholder="(non obligatoire)"
+        />
         <button type="submit" className="save-btn">
           {cd.id ? "Modifier" : "Ajouter"} le CD
         </button>
