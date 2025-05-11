@@ -24,11 +24,21 @@ class CdRepository {
       // "SELECT * from cds ORDER BY band_name ASC, release_year ASC;",
       "SELECT * FROM cds LEFT JOIN reviews ON cds.id = reviews.cd_id ORDER BY band_name ASC, release_year ASC",
     );
-    return rows as cds[];
+    // return rows as cds[];
+    return rows as Cd[];
+  }
+
+  //lecture d’un CD par son ID
+  async read(id: number) {
+    const [rows] = await databaseClient.query<Rows>(
+      "SELECT * FROM cds WHERE id = ?",
+      [id]
+    );
+    return rows[0] as Cd | undefined;
   }
 
   // UPDATE - Modifier un CD existant
-  async update(id: number, updatedCd: cd) {
+    async update(id: number, updatedCd: Cd){
     const [result] = await databaseClient.query<Result>(
       "UPDATE cds SET band_name = ?, album_name = ?, release_year = ?, cover = ? WHERE id = ?",
       [
