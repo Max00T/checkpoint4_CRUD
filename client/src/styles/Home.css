@@ -2,7 +2,15 @@ h2 {
   text-align: center;
   margin-top: 1rem;
 }
+.Dynamicsearch {
+  display: flex;
+  justify-content: center;
+}
 
+.search-bar {
+  margin-top: 0.3rem;
+  width: 20rem;
+}
 /* ✅ Liste des CDs */
 .cd-list {
   list-style: none;

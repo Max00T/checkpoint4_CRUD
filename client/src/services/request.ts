@@ -1,4 +1,5 @@
 import axios from "axios";
+import type {Cd} from "../types/index"
 
 //  Récupérer tous les CDs
 const getAllCds = () => {
@@ -11,7 +12,8 @@ const getAllCds = () => {
 };
 
 // 🔹 Récupérer un CD par son ID
-const getCdById = (id) => {
+//const getCdById = (id) => {
+  const getCdById = (id: number): Promise<Cd> => {
   return axios
     .get(`${import.meta.env.VITE_API_URL}/api/cds/${id}`)
     .then((response) => response.data)
@@ -22,7 +24,8 @@ const getCdById = (id) => {
 
 //🔹 Ajouter un CD
 
-const addCd = async (newCd) => {
+//const addCd = async (newCd) => {
+  const addCd = async (newCd: Cd): Promise<Cd> => {
   try {
     const response = await axios.post(
       `${import.meta.env.VITE_API_URL}/api/cds`,
@@ -35,7 +38,8 @@ const addCd = async (newCd) => {
   }
 };
 
-const updateCd = (id, updatedCd) => {
+//const updateCd = (id, updatedCd) => {
+  const updateCd = (id: number, updatedCd: Cd): Promise<Cd> => {
   return axios
     .put(`${import.meta.env.VITE_API_URL}/api/cds/${id}`, updatedCd)
     .then((response) => response.data)
@@ -45,7 +49,8 @@ const updateCd = (id, updatedCd) => {
 };
 
 // 🔹 Supprimer un CD
-const deleteCd = (id) => {
+//const deleteCd = (id) => {
+  const deleteCd = (id: number): Promise<void> => {
   return axios
     .delete(`${import.meta.env.VITE_API_URL}/api/cds/${id}`)
     .then(() => console.log(`CD ${id} supprimé`))
